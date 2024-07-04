@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Vaccination Request Management</title>
+    <meta name="theme-color" content="#ffffff">
+    <link href="assets/css/theme.css" rel="stylesheet" />
+
+    <script>
+        function storeFormData() {
+          const formData = {
+            firstname: document.getElementsByName('firstname')[0].value,
+            lastname: document.getElementsByName('lastname')[0].value,
+            securityno: document.getElementsByName('securityno')[0].value,
+            dob: document.getElementsByName('dob')[0].value,
+            email: document.getElementsByName('email')[0].value,
+            phnumber: document.getElementsByName('phnumber')[0].value,
+            gender: document.querySelector('input[name="gender"]:checked').value,
+            address1: document.getElementsByName('address1')[0].value,
+            address2: document.getElementsByName('address2')[0].value,
+            city: document.getElementsByName('city')[0].value,
+            state: document.getElementsByName('state')[0].value,
+            country: document.getElementsByName('country')[0].value,
+            insuranceco: document.getElementsByName('insuranceco')[0].value,
+            insuranceid: document.getElementsByName('insuranceid')[0].value,
+            diseases: document.querySelector('input[name="diseases"]:checked').value,
+            declaration: document.getElementsByName('declaration')[0].checked,
+          };
+          localStorage.setItem('vaccinationFormData', JSON.stringify(formData));
+          alert('Form data stored successfully!');
+        }
+
+        document.getElementById('bookAppointmentButton').addEventListener('click', function() {
+            document.getElementById('bookingForm').style.display = 'block';
+        });
+
+        $(document).ready(function() {
+          $('#viewProfileBtn').click(function() {
+              $.ajax({
+                  url: 'check_login.php',
+                  type: 'GET',
+                  success: function(response) {
+                      if (response.loggedIn) {
+                          window.location.href = 'profile.php';  
+                      } else {
+                          alert('Please log in to view profiles.');
+                          window.location.href = 'login.php';  
+                      }
+                  },
+                  error: function() {
+                      console.error('Error checking login status.');
+                  }
+              });
+          });
+      });
+      
+        
+        
+      </script>
+      <style>
+        .dropdown {
+          position: relative;
+          display: inline-block;
+        }
+        .dropdown-content {
+          display: none;
+          position: absolute;
+          background-color: #f1f1f1;
+          min-width: 160px;
+          box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+          z-index: 1;
+        }
+        .dropdown-content a:hover {background-color: #ddd;}
+
+        .dropdown:hover .dropdown-content {display: block;}
+
+        .dropdown:hover .dropbtn {background-color: #3e8e41;}
+      </style>
+
+  </head>
+
+
+  <body>
+
+    <main class="main" id="top">
+      <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3 d-block" data-navbar-on-scroll="data-navbar-on-scroll">
+        <div class="container"><a class="navbar-brand" href="index.html"><img src="assets\img\logo.png" width="118" alt="logo" /></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"> </span></button>
+          <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto pt-2 pt-lg-0 font-base">
+              <li class="nav-item px-2"><a class="nav-link" aria-current="page" href="#about">About Us</a></li>
+              <li class="nav-item px-2"><a class="nav-link" href="#vaccination-services">Vaccination Services</a></li>
+              <li class="nav-item px-2"><a class="nav-link" href="#appointments">Appointments</a></li>
+              <li class="nav-item px-2"><a class="nav-link" href="#faq">FAQ</a></li>
+              <li class="nav-item px-2"><a class="nav-link" href="#contact">Contact</a></li>
+            </ul>               
+            <li class="nav-item dropdown">
+              <a id="signinButton" class="btn btn-sm btn-outline-primary rounded-pill order-1 order-lg-0 ms-lg-4"
+                 onclick="toggleProfile()" href="login.html">Sign In</a>
+                 <div class="dropdown-content">
+                  <a class="dropdown-item" href="list_user.php" id="viewProfileBtn" onclick="preventDefault();">View Profile</a>
+                  <a class="dropdown-item" href="list.php" onclick="preventDefault();">Your registration</a>
+                  <a class="dropdown-item" href="#" onclick="logout(), preventDefault();">Logout</a>
+                </div>
+          </li>
+          </div>
+        </div>
+      </nav>      
+      <section class="py-xxl-10 pb-0" id="home">
+        <div class="bg-holder bg-size" style="background-image:url(assets/img/gallery/hero-bg.png);background-position:top center;background-size:cover;">
+        </div>
+
+        <div class="container">
+          <div class="row min-vh-xl-100 min-vh-xxl-25">
+            <div class="col-md-5 col-xl-6 col-xxl-7 order-0 order-md-1 text-end"><img class="pt-7 pt-md-0 w-100" src="assets/img/gallery/hero.png" alt="hero-header" /></div>
+            <div class="col-md-75 col-xl-6 col-xxl-5 text-md-start text-center py-6">
+              <h1 class="fw-light font-base fs-6 fs-xxl-7">Get Your <strong>Vaccination </strong>Scheduled<br />for&nbsp;<strong>Health and Safety.</strong></h1>
+              <p class="fs-1 mb-5">Book your vaccination appointment 24/7 – online or in-person. Our expert healthcare providers are here to assist you.</p><a class="btn btn-lg btn-primary rounded-pill" href="vaccine.html" role="button" onclick="preventDefault();">Request Vaccination</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+
+
+      <!-- About Us Section -->
+      <section class="py-5" id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="fw-light">About Us</h2>
+                    <p class="lead">We are dedicated to providing accessible and comprehensive vaccination services to ensure the health and safety of our community. Our mission is to offer convenient, efficient, and professional healthcare services, focusing on preventative care through vaccinations.</p>
+                    <p class="lead">With a team of experienced healthcare professionals, state-of-the-art facilities, and a commitment to excellence, we strive to make the vaccination process as seamless and stress-free as possible. Whether it's for COVID-19, flu, or other essential vaccines, we are here to support and protect you.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+  
+<!-- Vaccination Services Section -->
+<section class="py-0" id="vaccination-services">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 py-3">
+          <div class="bg-holder bg-size" >
+          </div>
+          <h2 class="text-center">OUR VACCINATION SERVICES</h2>
+        </div>
+      </div>
+    </div>
+  
+    <div class="container">
+      <div class="row py-5 align-items-center justify-content-center justify-content-lg-evenly">
+        
+        <div class="col-auto col-md-4 col-lg-auto text-xl-start">
+          <div class="d-flex flex-column align-items-center">
+            <div class="icon-box text-center">
+              <a class="text-decoration-none" href="#!">
+                <p class="fs-1 fs-xxl-2 text-center">COVID-19 Vaccination</p>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-auto col-md-4 col-lg-auto text-xl-start">
+          <div class="d-flex flex-column align-items-center">
+            <div class="icon-box text-center">
+              <a class="text-decoration-none" href="#!">
+                <p class="fs-1 fs-xxl-2 text-center">Flu Shots</p>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-auto col-md-4 col-lg-auto text-xl-start">
+          <div class="d-flex flex-column align-items-center">
+            <div class="icon-box text-center">
+              <a class="text-decoration-none" href="#!">
+                <p class="fs-1 fs-xxl-2 text-center">Child Vaccinations</p>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-auto col-md-4 col-lg-auto text-xl-start">
+          <div class="d-flex flex-column align-items-center">
+            <div class="icon-box text-center">
+              <a class="text-decoration-none" href="#!">
+                <p class="fs-1 fs-xxl-2 text-center">Travel Vaccines</p>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-auto col-md-4 col-lg-auto text-xl-start">
+          <div class="d-flex flex-column align-items-center">
+            <div class="icon-box text-center">
+              <a class="text-decoration-none" href="#!">
+                <p class="fs-1 fs-xxl-2 text-center">Senior Vaccinations</p>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-auto col-md-4 col-lg-auto text-xl-start">
+          <div class="d-flex flex-column align-items-center">
+            <div class="icon-box text-center">
+              <a class="text-decoration-none" href="#!">
+                <p class="fs-1 fs-xxl-2 text-center">Booster Shots</p>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+  
+      
+  <!-- Appointments Section -->
+      <section class="py-5" id="appointments">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+              <h2 class="fw-light">Book Your Appointment</h2>
+              <p class="lead">
+                Scheduling your vaccination appointment is quick and easy. Our online booking system allows you to choose a convenient time and date, ensuring you receive the care you need without the hassle.
+                <br>
+                <br>
+                Simply click the button below to access our booking form. Our expert healthcare providers are ready to assist you with any questions and ensure a smooth and efficient vaccination process.
+              </p>
+              <a class="btn btn-lg btn-primary rounded-pill" href="#" type="blank" onclick="preventDefault();">Book Appointment</a>
+            </div>
+          </div>
+        </div>
+      
+        
+  <!-- Vaccination Services Section -->
+      <section class="py-5 bg-light" id="faq">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+              <h2 class="fw-light">Frequently Asked Questions</h2>
+              <p class="lead">Find answers to some of the most common questions about vaccinations.</p>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-lg-10 mx-auto">
+              <div class="accordion" id="faqAccordion">
+                
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="faqHeadingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseOne" aria-expanded="true" aria-controls="faqCollapseOne">
+                      What is the COVID-19 vaccine?
+                    </button>
+                  </h2>
+                  <div id="faqCollapseOne" class="accordion-collapse collapse show" aria-labelledby="faqHeadingOne" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                      The COVID-19 vaccine is designed to provide immunity against the SARS-CoV-2 virus, which causes COVID-19. It helps your body develop protection against the virus without you having to get the illness.
+                    </div>
+                  </div>
+                </div>
+      
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="faqHeadingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseTwo" aria-expanded="false" aria-controls="faqCollapseTwo">
+                      Who is eligible for the flu shot?
+                    </button>
+                  </h2>
+                  <div id="faqCollapseTwo" class="accordion-collapse collapse" aria-labelledby="faqHeadingTwo" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                      Most people aged 6 months and older are eligible for the flu shot. It is especially recommended for individuals who are at higher risk of complications from the flu, such as young children, elderly adults, pregnant women, and people with chronic health conditions.
+                    </div>
+                  </div>
+                </div>
+      
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="faqHeadingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseThree" aria-expanded="false" aria-controls="faqCollapseThree">
+                      Are vaccines safe?
+                    </button>
+                  </h2>
+                  <div id="faqCollapseThree" class="accordion-collapse collapse" aria-labelledby="faqHeadingThree" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                      Yes, vaccines are thoroughly tested for safety and efficacy before they are approved for public use. They undergo rigorous clinical trials and continuous monitoring to ensure they are safe for the general population.
+                    </div>
+                  </div>
+                </div>
+      
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="faqHeadingFour">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseFour" aria-expanded="false" aria-controls="faqCollapseFour">
+                      What are the common side effects of vaccines?
+                    </button>
+                  </h2>
+                  <div id="faqCollapseFour" class="accordion-collapse collapse" aria-labelledby="faqHeadingFour" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                      Common side effects of vaccines are usually mild and temporary. They can include pain at the injection site, fever, fatigue, and muscle aches. These side effects typically resolve on their own within a few days.
+                    </div>
+                  </div>
+                </div>
+      
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="faqHeadingFive">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseFive" aria-expanded="false" aria-controls="faqCollapseFive">
+                      How can I schedule a vaccination appointment?
+                    </button>
+                  </h2>
+                  <div id="faqCollapseFive" class="accordion-collapse collapse" aria-labelledby="faqHeadingFive" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                      You can schedule a vaccination appointment online through our website or by visiting our healthcare facility in person. We offer flexible scheduling options to accommodate your needs.
+                    </div>
+                  </div>
+                </div>
+      
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+  
+      <section class="py-5" id="contact">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+              <h2 class="fw-light">Contact Us</h2>
+              <p class="lead">We're here to help and answer any questions you might have. We look forward to hearing from you!</p>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-lg-6">
+              <h3>Get in Touch</h3>
+              <p>If you have any questions about our vaccination services, please don't hesitate to reach out to us:</p>
+              <ul class="list-unstyled">
+                <li><strong>Address:</strong> 123 Health St, Wellness City, HC 45678</li>
+                <li><strong>Email:</strong> contact@vaccinationservice.com</li>
+                <li><strong>Phone:</strong> (123) 456-7890</li>
+                <li><strong>Fax:</strong> (123) 456-7891</li>
+              </ul>
+            </div>
+            <div class="col-lg-6">
+              <h3>Contact Form</h3>
+              <form>
+                <div class="mb-3">
+                  <label for="contactName" class="form-label">Name</label>
+                  <input type="text" class="form-control" id="contactName" placeholder="Your Name">
+                </div>
+                <div class="mb-3">
+                  <label for="contactEmail" class="form-label">Email address</label>
+                  <input type="email" class="form-control" id="contactEmail" placeholder="name@example.com">
+                </div>
+                <div class="mb-3">
+                  <label for="contactMessage" class="form-label">Message</label>
+                  <textarea class="form-control" id="contactMessage" rows="4" placeholder="Your Message"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Send Message</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+
+
+        <section class="py-0 bg-primary">
+
+            <div class="container">
+              <div class="row justify-content-md-between justify-content-evenly py-4">
+                <div class="col-12 col-sm-8 col-md-6 col-lg-auto text-center text-md-start">
+                  <center><p class="fs--1 my-2 fw-bold text-200" >All rights Reserved &copy;, 2024</p></center>
+                </div>
+
+              </div>
+            </div>
+        </section>
+
+
+
+
+      </main>
+      <script>
+
+          function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+            if (isLoggedIn === 'true') {
+                document.getElementById('signinButton').textContent = 'Profile'; 
+                document.getElementById('dropdown-content').style.display = 'block'; 
+            } else {
+                document.getElementById('signinButton').textContent = 'Sign In'; 
+                document.getElementById('dropdown-content').style.display = 'none'; 
+            }
+        }
+
+
+        function toggleProfile() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+            if (isLoggedIn === 'true') {
+            } else {
+                localStorage.setItem('isLoggedIn', 'true');
+                checkLoginStatus();
+            }
+        }
+        function logout() {
+            localStorage.setItem('isLoggedIn', 'false'); 
+            checkLoginStatus(); 
+
+        }
+
+
+        checkLoginStatus();
+      </script>
+      <script src="vendors/@popperjs/popper.min.js"></script>
+      <script src="vendors/bootstrap/bootstrap.min.js"></script>
+      <script src="vendors/is/is.min.js"></script>
+      <script src="https://scripts.sirv.com/sirvjs/v3/sirv.js"></script>
+      <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+      <script src="vendors/fontawesome/all.min.js"></script>
+      <script src="assets/js/theme.js"></script>
+  
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Fjalla+One&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100&amp;display=swap" rel="stylesheet">
+      
+
+
+    </body>
+  
+  </html>

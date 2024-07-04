@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign up form</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+  <style>
+    html, body {
+      display: flex;
+      justify-content: center;
+      font-family: Roboto, Arial, sans-serif;
+      font-size: 15px;
+      background-color: rgb(176, 198, 207);
+    }
+    form {
+      border: 5px solid #f1f1f1;
+      background-color: #f1f1f1;
+      padding: 20px;
+      max-width: 400px;
+      margin-top: 50px;
+    }
+    input[type=text], input[type=email], input[type=password] {
+      width: calc(100% - 16px);
+      padding: 10px;
+      margin: 8px 0;
+      display: block;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    input[type=submit]{
+        background-color: #4286f4;
+        color: white;
+        padding: 14px 0;
+        margin: 10px 0;
+        border: none;
+        cursor: pointer;
+        width: 60%;
+    }
+    button {
+      background-color: #4286f4;
+      color: white;
+      padding: 14px 0;
+      margin: 10px 0;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      opacity: 0.8;
+    }
+    .formcontainer {
+      text-align: center;
+    }
+    .container {
+      padding: 16px 0;
+      text-align: left;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .message {
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+    .success {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .error {
+      background-color: #f44336;
+      color: white;
+    }
+    p {
+      margin-top: 20px;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#signupForm').on('submit', function(event) {
+        event.preventDefault(); 
+    
+        var username = $('input[name="username"]').val();
+        var email = $('input[name="email"]').val();
+        var password = $('input[name="password"]').val();
+        var confirmPassword = $('input[name="confirmPassword"]').val();
+    
+        if (password !== confirmPassword) {
+          showMessage('Passwords do not match!', 'error');
+          return;
+        }
+    
+        $.post('register.php', $(this).serialize(), function(response) {
+          if (response.status === 'success') {
+            showMessage(response.message, 'success');
+            // Optionally redirect after successful registration
+            setTimeout(function() {
+              window.location.href = 'login.html';
+            }, 2000); // Redirect after 2 seconds
+          } else {
+            showMessage(response.message, 'error');
+          }
+        }, 'json')
+        .fail(function(xhr, status, error) {
+          console.error('AJAX Error:', xhr.responseText);
+          showMessage('AJAX Error: Unable to process request.', 'error');
+        });
+      });
+
+      function showMessage(message, type) {
+        var messageDiv = $('<div>').addClass('message').addClass(type).text(message);
+        $('.formcontainer').append(messageDiv);
+        setTimeout(function() {
+          messageDiv.fadeOut('slow', function() {
+            $(this).remove();
+          });
+        }, 3000); // Remove message after 3 seconds
+      }
+    });
+  </script>
+</head>
+<body>
+  <form id="signupForm" action="register.php" method="POST">
+    <h1>SIGN UP</h1>
+    <div class="formcontainer">
+      <div class="container">
+        <label for="uname"><strong>Username</strong></label>
+        <input type="text" placeholder="Enter Username" name="username" required>
+        <label for="mail"><strong>E-mail</strong></label>
+        <input type="email" placeholder="Enter E-mail" name="email" required>
+        <label for="psw"><strong>Password</strong></label>
+        <input type="password" placeholder="Enter Password" name="password" required>
+        <label for="conpsw"><strong>Confirm Password</strong></label>
+        <input type="password" placeholder="Confirm Password" name="confirmPassword" required>
+      </div>
+      <input type="submit" value="SIGN UP">
+      <p>Already have an account? <a href="login.html">Login here</a></p>
+    </div>
+  </form>
+</body>
+</html>

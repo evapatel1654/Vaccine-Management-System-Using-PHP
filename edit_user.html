@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+
+  <head>
+    <title>Edit User</title>
+  </head>
+  <body>
+<?php include 'fetch_user.php'; ?>
+<form id="editUserForm" method="post" action="edit_user.php">
+    <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+    <input type="text" name="username" value="<?php echo $user['username']; ?>" required>
+    <input type="email" name="email" value="<?php echo $user['email']; ?>" required>
+    <button type="submit">Edit User</button>
+  </form>  
+</body>
+</html>
