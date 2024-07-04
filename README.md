@@ -30,12 +30,12 @@ To run this project locally, follow these steps:
 
 1. Clone the repository:
     ```bash
-    gh repo clone evapatel1654/Vaccine-Management-System-Using-PHP
+    [gh repo clone evapatel1654/Vaccine-Management-System-Using-PHP](https://github.com/evapatel1654/Vaccine-Management-System-Using-PHP.git)
     ```
 
 2. Navigate to the project directory:
     ```bash
-    cd vaccination-management-system
+    cd vaccination-management-system-using-php
     ```
 
 3. Set up the database:
